@@ -67,7 +67,7 @@ def create_new_tenant(authtoken, account_name,quota,root_password):
     #headers={'X-Csrf-Token':'' + authtoken }
     headers={'Authorization': 'Bearer ' + authtoken }
    
-    data_json= "{ \"name\":\""+ account_name +"\",\"capabilities\": [\"management\",\"s3\" ],\"policy\": {\"useAccountIdentitySource\": false,\"allowPlatformServices\": false,\"quotaObjectBytes\":"+ str(quota) +"},\"password\": \""+ root_password +"\",\"grantRootAccessToGroup\": \"federated-group/RSI_GLOORG_DC-AGILE\"}"
+    data_json= "{ \"name\":\""+ account_name +"\",\"capabilities\": [\"management\",\"s3\" ],\"policy\": {\"useAccountIdentitySource\": false,\"allowPlatformServices\": false,\"quotaObjectBytes\":"+ str(quota) +"},\"password\": \""+ root_password +"\",\"grantRootAccessToGroup\":\""+ api_default_group()+"\"}"
     
     data=json.loads(data_json)
    

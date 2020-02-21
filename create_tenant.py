@@ -34,11 +34,12 @@ response = get_tenants_accounts(auth_token)
 #Let's create a new test tenant.
 
 
-respo= create_new_tenant(auth_token,'Mariano_test2',100000000,'qwerty123456')
+respo= create_new_tenant(auth_token,'Mariano_test3',100000000,'qwerty123456')
 
-#if respo.status_code != 201:
-    #print (respo).json()['message']
-    #print (respo).json()['errors']
-print (json.dumps(respo.json(), indent=1))
-   # raise Exception('POST /create new tenant {}'.format(respo.status_code))
+if respo.status_code == 201:
+    print (json.dumps(respo.json(), indent=1))
+else:
+    
+    print (json.dumps(respo.json(), indent=1))
+    raise Exception('POST /create new tenant {}'.format(respo.status_code))
 
