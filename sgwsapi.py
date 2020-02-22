@@ -75,19 +75,44 @@ def create_new_tenant(authtoken, account_name,quota,root_password):
 
 
 
+#Operations on alarms:
 
-#operations on tenants... needs a X-Csrf-Token
+def get_alarms(authtoken):
+    headers={'Authorization': 'Bearer ' + authtoken }
+    return requests.get(_url('/api/v3/grid/alarms'), headers=headers, verify=verify)
+
+
+def get_health(authtoken):
+    headers={'Authorization': 'Bearer ' + authtoken }
+    return requests.get(_url('/api/v3/grid/health'), headers=headers, verify=verify)
+
+def get_health_topology(authtoken):
+    headers={'Authorization': 'Bearer ' + authtoken }
+    return requests.get(_url('/api/v3/grid/health/topology'), headers=headers, verify=verify)
+
+
+#Operations on Users 
+
+
+#Lists Grid Administrator Users
+
+def get_admin_users(authtoken):
+    headers={'Authorization': 'Bearer ' + authtoken }
+    return requests.get(_url('/api/v3/grid/users'), headers=headers, verify=verify)
+
+    #operations on tenants... needs a X-Csrf-Token
 def get_usage(csrf_authtoken):
     headers={'Authorization': 'Bearer ' + csrf_authtoken }
     return requests.get(_url('/api/v3/org/usage'), headers=headers, verify=verify)
 
     
 
-#/org/groups   Creates a new Tenant User Group
+################################################################
+#Inside a  Tenant
+############TO BE IMPLEMENTED##################################
 
-
-############TO BE IMPLEMENTED##################
-def create_new_group(csrf_authtoken):
+def create_new_tenant_user_group(csrf_authtoken):
+    #/org/groups   Creates a new Tenant User Group
     headers={'Authorization': 'Bearer ' + csrf_authtoken }
     body={
                 "displayName": "Developers",
@@ -125,29 +150,20 @@ def create_new_group(csrf_authtoken):
                     "uniqueName": "federated-group/developers"
                 }
 
+                
 
-################################################################
-#Operations on alarms:
+def create_new_bucket(csrf_authtoken,bucket_name, region):
+    #/org/containers
+    #Create a bucket for an S3 tenant account
+    data=   {
+            "name": bucket_name,
+            "region": region,
+            "compliance": {
+                "autoDelete": "false",
+                "legalHold": "false",
+                "retentionPeriodMinutes": 2629800
+            }
+    }
 
-def get_alarms(authtoken):
-    headers={'Authorization': 'Bearer ' + authtoken }
-    return requests.get(_url('/api/v3/grid/alarms'), headers=headers, verify=verify)
+###################TO BE IMPLEMENTED##################333
 
-
-def get_health(authtoken):
-    headers={'Authorization': 'Bearer ' + authtoken }
-    return requests.get(_url('/api/v3/grid/health'), headers=headers, verify=verify)
-
-def get_health_topology(authtoken):
-    headers={'Authorization': 'Bearer ' + authtoken }
-    return requests.get(_url('/api/v3/grid/health/topology'), headers=headers, verify=verify)
-
-
-#Operations on Users 
-
-
-#Lists Grid Administrator Users
-
-def get_admin_users(authtoken):
-    headers={'Authorization': 'Bearer ' + authtoken }
-    return requests.get(_url('/api/v3/grid/users'), headers=headers, verify=verify)

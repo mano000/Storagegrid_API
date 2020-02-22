@@ -39,7 +39,9 @@ respo= create_new_tenant(auth_token,'Mariano_test3',100000000,'qwerty123456')
 if respo.status_code == 201:
     print (json.dumps(respo.json(), indent=1))
 else:
-    
+
     print (json.dumps(respo.json(), indent=1))
     raise Exception('POST /create new tenant {}'.format(respo.status_code))
 
+
+#resp1=create_new_bucket(auth_token,"testbucket","eu-kau-1")

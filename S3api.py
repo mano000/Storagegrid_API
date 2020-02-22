@@ -5,11 +5,11 @@ import boto3.session
 from botocore.errorfactory import ClientError
 import random
 import string
-from global_secrets import grid_enpoint, s3_access_key,s3_secret_key
+from global_secrets import grid_endpoint, s3_access_key,s3_secret_key
 
 
 #Set the endpoint and generate a unique bucket name
-endpoint = grid_enpoint()
+endpoint = grid_endpoint()
 
 access_key = s3_access_key()
 secret_key = s3_secret_key()
