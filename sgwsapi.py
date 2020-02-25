@@ -167,11 +167,3 @@ def create_new_bucket(tenant_authtoken,bucket_name, region):
 
     return requests.post(_url('/api/v3/org/containers'), json=data, headers=headers, verify=verify)
 
-
-def delete_bucket(tenant_authtoken,bucket_name):
-    headers={'Authorization': 'Bearer ' + tenant_authtoken }
-    data={
-            "name": bucket_name,
-            "region": region,
-           
-    }
