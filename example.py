@@ -1,5 +1,5 @@
 from sgwsapi import *
-from global_secrets import api_get_url,api_password,api_username,api_default_group
+from global_secrets import api_get_url,api_password,api_username,api_default_group,tenant_account_for_test
 import json
 
 
@@ -24,9 +24,6 @@ print('Auth Token {}'.format(resp.json()["data"]))
 auth_token=resp.json()["data"]
 
 
-
-# Get tenant space usage:
-print (json.dumps(get_usage(auth_token).json(), indent=1))# needs CSfr token
 
 # Get grid health:
 print (json.dumps(get_health(auth_token).json(), indent=1))
@@ -63,22 +60,22 @@ for items in response.json()['data']:
 
 
 
-#Let's create a new test tenant.
+
 
 #Get csfr auth token:
 
 
-resp = get_csrf_token(api_user,api_passwd)
+resp = get_tenant_token(api_user,api_passwd,tenant_account_for_test())
 if resp.status_code != 200:
     raise Exception('POST /authorize/ {}'.format(resp.status_code) + " Error: "+resp.json()["message"]["text"] )
 
-print('Auth Token {}'.format(resp.json()["data"]))
-auth_token_csfr=resp.json()["data"]
+print('Auth Token for tenant {}'.format(resp.json()["data"]))
+auth_token_tenant=resp.json()["data"]
 
 
-#respo= create_new_tenant(auth_token_csfr,"test_Mariano",10000000,"qwerty123456")
 
-#if respo.status_code != 200:
-#    print (respo)
-#    raise Exception('POST /create new tenant {}'.format(respo.status_code))
+# Get tenant space usage:
+print (json.dumps(get_usage(auth_token_tenant).json(), indent=1))
+
+
 

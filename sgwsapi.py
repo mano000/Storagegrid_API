@@ -31,13 +31,14 @@ def get_auth_token(username, password):
     return requests.post(_url('/api/v3/authorize'), json=auth_json, verify=verify)
 
 
-def get_csrf_token (username, password):
+def get_tenant_token (username, password, accountId):
 
     auth_json={
+        "accountId": accountId,
         "username": username,
         "password": password ,
         "cookie": "true",
-        "csrfToken": "true"
+        "csrfToken": "false"
     }
     return requests.post(_url('/api/v3/authorize'), json=auth_json, verify=verify)
 
@@ -101,8 +102,8 @@ def get_admin_users(authtoken):
     return requests.get(_url('/api/v3/grid/users'), headers=headers, verify=verify)
 
     #operations on tenants... needs a X-Csrf-Token
-def get_usage(csrf_authtoken):
-    headers={'Authorization': 'Bearer ' + csrf_authtoken }
+def get_usage(tenant_authtoken):
+    headers={'Authorization': 'Bearer ' + tenant_authtoken }
     return requests.get(_url('/api/v3/org/usage'), headers=headers, verify=verify)
 
     
@@ -111,59 +112,66 @@ def get_usage(csrf_authtoken):
 #Inside a  Tenant
 ############TO BE IMPLEMENTED##################################
 
-def create_new_tenant_user_group(csrf_authtoken):
-    #/org/groups   Creates a new Tenant User Group
-    headers={'Authorization': 'Bearer ' + csrf_authtoken }
+def create_new_tenant_user_group(tenant_authtoken, group_name, bucket_name):
+    
+    #/org/groups   Creates a new Tenant User Group only with access to a specific bucket.
+    #This group can operate over the bucket but not over the tenant, and can generate S3 keys.
+
+    headers={'Authorization': 'Bearer ' + tenant_authtoken }
     body={
-                "displayName": "Developers",
-                    "policies": {
-                    "management": {
-                    "manageAllContainers": "false",
-                    "manageEndpoints": "false",
-                    "manageOwnS3Credentials": "true",
-                    "rootAccess": "false"
-              },
-                "s3": {
-                    "Id": "123456",
-                    "Version": "2015-09-08",
-                "Statement": [
-                        {
-                            "Sid": "string",
-                            "Effect": "Allow",
-                            "Action": "s3:GetObject",
-                            "NotAction": "s3:GetObject",
-                            "Resource": [
-                                "arn:aws:s3:::mybucket/myobject"
-                            ],
-                            "NotResource": [
-                                "arn:aws:s3:::mybucket/myobject"
-                            ],
-                "Condition": {
-                    "condition_type": {
-                    "condition_key": "condition_value"
+                "displayName": group_name,
+                "policies": {
+                    "management": { 
+                    "manageAllContainers": False,
+                    "manageEndpoints": False,
+                    "manageOwnS3Credentials": True,
+                    "rootAccess": False },
+                    "s3": {
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": "s3:*",
+                                    "Resource": [
+                                        "arn:aws:s3:::"+bucket_name,
+                                        "arn:aws:s3:::"+bucket_name+"/*"
+                                    ],
                             }
-                        }
-                    }
-                    ]                     
-                       }
-                     },
-                    "uniqueName": "federated-group/developers"
+                                ]                     
+                            }
+                        },
+                "uniqueName": "federated-group/"+group_name
                 }
+
+    data=body
+    #For debug:
+    print (json.dumps(data, indent=1))
+    
+
+    
+    return requests.post(_url('/api/v3/org/groups'), json=data, headers=headers, verify=verify)
+
 
                 
 
-def create_new_bucket(csrf_authtoken,bucket_name, region):
+def create_new_bucket(tenant_authtoken,bucket_name, region):
     #/org/containers
     #Create a bucket for an S3 tenant account
-    data=   {
+    headers={'Authorization': 'Bearer ' + tenant_authtoken }
+    data={
             "name": bucket_name,
             "region": region,
-            "compliance": {
-                "autoDelete": "false",
-                "legalHold": "false",
-                "retentionPeriodMinutes": 2629800
-            }
+           
     }
+    #For debug:
+    print (json.dumps(data, indent=1))
 
-###################TO BE IMPLEMENTED##################333
+    return requests.post(_url('/api/v3/org/containers'), json=data, headers=headers, verify=verify)
 
+
+def delete_bucket(tenant_authtoken,bucket_name):
+    headers={'Authorization': 'Bearer ' + tenant_authtoken }
+    data={
+            "name": bucket_name,
+            "region": region,
+           
+    }
