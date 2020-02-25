@@ -3,8 +3,7 @@ import json
 import os
 import getpass
 
-#Main program:
-# Get environment variables
+
 # SSO username and password with admin rights
 
 api_url = ''
@@ -43,5 +42,3 @@ else:
     print (json.dumps(respo.json(), indent=1))
     raise Exception('POST /create new tenant {}'.format(respo.status_code))
 
-
-#resp1=create_new_bucket(auth_token,"testbucket","eu-kau-1")

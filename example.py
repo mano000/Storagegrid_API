@@ -62,7 +62,7 @@ for items in response.json()['data']:
 
 
 
-#Get csfr auth token:
+#Get tenant auth token:
 
 
 resp = get_tenant_token(api_user,api_passwd,tenant_account_for_test())
