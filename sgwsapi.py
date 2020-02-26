@@ -54,6 +54,19 @@ def get_tenants_accounts(authtoken):
     return requests.get (_url('/api/v3/grid/accounts?limit=250'), headers=headers , verify=verify)
 
 
+def get_tenant_by_name (authtoken, tenant_name):
+    #Returns the tenant id that match the name
+    query=get_tenants_accounts(authtoken)
+    for items in query.json()['data']:
+       # print('Account id: {}, account Name: {}'.format(items['id'], items['name']))
+        if items['name']==tenant_name:
+            return items['id']
+       
+
+
+
+
+
 #Gets the storage usage information for the Storage Tenant Account
 
 def get_storage_usage_in_tenant(tenant_id, authtoken):
@@ -108,9 +121,9 @@ def get_usage(tenant_authtoken):
 
     
 
-################################################################
+
 #Inside a  Tenant
-############TO BE IMPLEMENTED##################################
+
 
 def create_new_tenant_user_group(tenant_authtoken, group_name, bucket_name):
     
