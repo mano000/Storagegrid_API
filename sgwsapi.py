@@ -58,7 +58,6 @@ def get_tenant_by_name (authtoken, tenant_name):
     #Returns the tenant id that match the name
     query=get_tenants_accounts(authtoken)
     for items in query.json()['data']:
-       # print('Account id: {}, account Name: {}'.format(items['id'], items['name']))
         if items['name']==tenant_name:
             return items['id']
        
@@ -78,7 +77,7 @@ def get_storage_usage_in_tenant(tenant_id, authtoken):
 #Creates a new Storage Tenant Account
 
 def create_new_tenant(authtoken, account_name,quota,root_password):
-    #headers={'X-Csrf-Token':'' + authtoken }
+   
     headers={'Authorization': 'Bearer ' + authtoken }
    
     data_json= "{ \"name\":\""+ account_name +"\",\"capabilities\": [\"management\",\"s3\" ],\"policy\": {\"useAccountIdentitySource\": false,\"allowPlatformServices\": false,\"quotaObjectBytes\":"+ str(quota) +"},\"password\": \""+ root_password +"\",\"grantRootAccessToGroup\":\""+ api_default_group()+"\"}"
