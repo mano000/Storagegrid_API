@@ -1,5 +1,5 @@
 
-from sgwsapi import create_new_bucket,get_tenant_token, get_tenant_by_name, get_auth_token,create_new_tenant_user_group
+from sgwsapi import create_new_bucket,get_tenant_token, get_tenant_by_name, get_auth_token,create_new_tenant_user_group, create_new_tenant_user_group_noS3access
 import json
 import os
 import getpass
@@ -58,9 +58,9 @@ else:
     print (json.dumps(respo.json(), indent=1))
     raise Exception('POST /api/v3/org/container {}'.format(respo.status_code))
 
-#Add the group to the tenant with the desired bucket policy:
+#Add the group to the tenant with the desired bucket policy :
 
-group_name= raw_input("Please enter group name: ")
+group_name= raw_input("Please enter the admin group name: ")
 
 respo=create_new_tenant_user_group(auth_token_tenant,group_name,bucket_name)
 
@@ -71,3 +71,14 @@ else:
 
     print (json.dumps(respo.json(), indent=1))
     raise Exception('POST /api/v3/org/groups {}'.format(respo.status_code))
+
+users_group_name=raw_input("Please enter the users group name with no S3 access: ")
+
+response=create_new_tenant_user_group_noS3access(auth_token_tenant,users_group_name,bucket_name)
+
+if response.status_code == 201:
+    print (json.dumps(response.json(), indent=1))
+else:
+
+    print (json.dumps(response.json(), indent=1))
+    raise Exception('POST /api/v3/org/groups {}'.format(response.status_code))

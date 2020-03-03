@@ -56,6 +56,7 @@ for items in response.json()['data']:
    
    for buckets in buckets_response.json()['data']['buckets']:
             print('{} size: {} TB numbers of ojects:{}'.format(buckets['name'], buckets['dataBytes']/1099511627776, buckets['objectCount']))
+            
    print ("---------------------------------------------- ")
 
 

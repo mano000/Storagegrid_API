@@ -162,7 +162,31 @@ def create_new_tenant_user_group(tenant_authtoken, group_name, bucket_name):
     
     return requests.post(_url('/api/v3/org/groups'), json=data, headers=headers, verify=verify)
 
+def create_new_tenant_user_group_noS3access(tenant_authtoken, group_name, bucket_name):
+    
+    #/org/groups   Creates a new Tenant User Group only with access to a specific bucket.
+    #This group can operate over the bucket but not over the tenant, and can generate S3 keys.
 
+    headers={'Authorization': 'Bearer ' + tenant_authtoken }
+    body={
+                "displayName": group_name,
+                "policies": {
+                    "management": { 
+                    "manageAllContainers": False,
+                    "manageEndpoints": False,
+                    "manageOwnS3Credentials": True,
+                    "rootAccess": False }
+                        },
+                "uniqueName": "federated-group/"+group_name
+                }
+
+    data=body
+    #For debug:
+    print (json.dumps(data, indent=1))
+    
+
+    
+    return requests.post(_url('/api/v3/org/groups'), json=data, headers=headers, verify=verify)
                 
 
 def create_new_bucket(tenant_authtoken,bucket_name, region):
@@ -178,4 +202,12 @@ def create_new_bucket(tenant_authtoken,bucket_name, region):
     print (json.dumps(data, indent=1))
 
     return requests.post(_url('/api/v3/org/containers'), json=data, headers=headers, verify=verify)
+
+#/org/containers/{bucketName}/last-access-time
+
+#Determines if LAT is enable on a bucket
+def get_last_access_time(tenant_authtoken,bucket_name):
+     headers={'Authorization': 'Bearer ' + tenant_authtoken }
+     return requests.get (_url('/api/v3/org/containers/{}/last-access-time'.format(bucket_name)), headers=headers , verify=verify)
+
 
