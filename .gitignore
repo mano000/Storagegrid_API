@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.pyc
 global_secrets.py
+Bucket_request.py
 # C extensions
 *.so
 
